@@ -1,0 +1,24 @@
+//@version=5
+indicator(title="Hareketli Ortalama v1.2", shorttitle="BHO", overlay=true, timeframe="")
+src = input(close, title="Source")
+//cizgi 1
+uzunluk = input.int(200, minval=1, title="Uzunluk")
+sonucyavas = ta.sma(src, uzunluk)
+cizimyavas = plot(sonucyavas, color=color.blue,linewidth = 2,title="MA")
+
+//cizgi 2
+uzunluk2 = input.int(50, minval=1,title = "Uzunluk 2")
+sonuchizli = ta.sma(src,uzunluk2)
+cizimhizli = plot(sonuchizli, color = color.red,linewidth = 2,title = "MA2")
+
+fill(cizimhizli, cizimyavas, color = sonuchizli > sonucyavas ? color.new(color.green, 70) : color.new(color.red, 70))
+
+ma(source, length, type) =>
+    switch type
+        "SMA" => ta.sma(source, length)
+        "EMA" => ta.ema(source, length)
+        "SMMA (RMA)" => ta.rma(source, length)
+        "WMA" => ta.wma(source, length)
+        "VWMA" => ta.vwma(source, length)
+
+typeMA = input.string(title = "Method", defval = "SMA", options=["SMA", "EMA", "SMMA (RMA)", "WMA", "VWMA"], group="Smoothing", display = display.data_window)
