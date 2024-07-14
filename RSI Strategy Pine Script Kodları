@@ -1,0 +1,47 @@
+//@version=5
+strategy("RSI Buy and Sell with Close Position", overlay=true)
+
+// RSI parametreleri
+rsiLength = input(14, title="RSI Length")
+overboughtLevel = input(85, title="Overbought Level")
+oversoldLevel = input(20, title="Oversold Level")
+closeSellLevel = input(80, title="Close Sell Level")
+closeBuyLevel = input(30, title="Close Buy Level")
+
+// RSI hesaplama
+rsi = ta.rsi(close, rsiLength)
+
+// Satış koşulu
+sellCondition = rsi > overboughtLevel
+
+// Alış koşulu
+buyCondition = rsi < oversoldLevel
+
+// Satış pozisyonu kapatma koşulu
+closeSellCondition = rsi < closeSellLevel
+
+// Alış pozisyonu kapatma koşulu
+closeBuyCondition = rsi > closeBuyLevel
+
+// Satış sinyali
+if (sellCondition)
+    strategy.entry("Sell", strategy.short)
+
+// Alış sinyali
+if (buyCondition)
+    strategy.entry("Buy", strategy.long)
+
+// Satış pozisyonu kapatma sinyali
+if (closeSellCondition)
+    strategy.close("Sell")
+
+// Alış pozisyonu kapatma sinyali
+if (closeBuyCondition)
+    strategy.close("Buy")
+
+// RSI göstergesi çizimi
+plot(rsi, title="RSI", color=color.blue)
+hline(overboughtLevel, "Overbought Level", color=color.red)
+hline(oversoldLevel, "Oversold Level", color=color.green)
+hline(closeSellLevel, "Close Sell Level", color=color.orange)
+hline(closeBuyLevel, "Close Buy Level", color=color.purple)
